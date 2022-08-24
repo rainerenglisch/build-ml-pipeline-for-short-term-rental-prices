@@ -28,7 +28,7 @@ def test_column_names(data):
     these_columns = data.columns.values
 
     # This also enforces the same order
-    assert list(expected_colums) == list(these_columns)
+    assert set(expected_colums) == set(these_columns)
 
 
 def test_neighborhood_names(data):
