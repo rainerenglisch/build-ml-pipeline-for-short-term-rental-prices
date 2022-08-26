@@ -10,7 +10,7 @@ from omegaconf import DictConfig
 _steps = [
     "download",
     "basic_cleaning",
-    "data_check",
+   # "data_check",
     "data_split",
     "train_random_forest",
     # NOTE: We do not include this in the steps so it is not run by mistake.
@@ -93,7 +93,6 @@ def go(config: DictConfig):
 
 
         if "train_random_forest" in active_steps:
-
             # NOTE: we need to serialize the random forest configuration into JSON
             rf_config = os.path.abspath("rf_config.json")
             with open(rf_config, "w+") as fp:
@@ -109,7 +108,7 @@ def go(config: DictConfig):
                 os.path.join(hydra.utils.get_original_cwd(), "src", "train_random_forest"), 
                 "main",
                 parameters={               
-                    "trainval_artifact" : "clean_sample.csv:latest",
+                    "trainval_artifact" : "trainval_data.csv:latest",
                     "val_size" : config["modeling"]["val_size"],
                     "random_seed" : config["modeling"]["random_seed"],
                     "stratify_by" : config["modeling"]["stratify_by"],
@@ -120,14 +119,19 @@ def go(config: DictConfig):
             )
 
 
-
         if "test_regression_model" in active_steps:
-
             ##################
             # Implement here #
             ##################
-
-            pass
+            _ = mlflow.run(
+                f"{config['main']['components_repository']}/test_regression_model", 
+                "main",
+                version="udacity-nyc-pipeline",
+                parameters={               
+                    "test_dataset" : "test_data.csv:latest",
+                    "mlflow_model" : "random_forest_export:prod",
+                },
+            )
 
 
 if __name__ == "__main__":

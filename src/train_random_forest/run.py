@@ -110,7 +110,14 @@ def go(args):
     # run.log_artifact to log the artifact to the run
     # YOUR CODE HERE
     ######################################
-
+    artifact = wandb.Artifact(
+        args.output_artifact,
+        type="model_export",
+        description="model export",
+        metadata=rf_config,
+    )   
+    artifact.add_dir("random_forest_dir")
+    run.log_artifact(artifact)
     # Plot feature importance
     fig_feat_imp = plot_feature_importance(sk_pipe, processed_features)
 
@@ -120,6 +127,7 @@ def go(args):
     # Now log the variable "mae" under the key "mae".
     # YOUR CODE HERE
     ######################################
+    run.summary['mae'] = mae
 
     # Upload to W&B the feture importance visualization
     run.log(
