@@ -42,7 +42,7 @@ def go(config: DictConfig):
             #    "main",
             _ = mlflow.run(f"{config['main']['components_repository']}/get_data",
                 entry_point="main",
-                #version="udacity-nyc-pipeline",
+                version="main",
                 parameters={
                     "sample": config["etl"]["sample"],
                     "artifact_name": "sample.csv",
@@ -82,7 +82,7 @@ def go(config: DictConfig):
             _ = mlflow.run(
                 f"{config['main']['components_repository']}/train_val_test_split", 
                 "main",
-                #version="udacity-nyc-pipeline",
+                version="main",
                 parameters={               
                     "input" : "clean_sample.csv:latest",
                     "test_size" : config["modeling"]["test_size"],
@@ -126,7 +126,7 @@ def go(config: DictConfig):
             _ = mlflow.run(
                 f"{config['main']['components_repository']}/test_regression_model", 
                 "main",
-                #version="udacity-nyc-pipeline",
+                version="main",
                 parameters={               
                     "test_dataset" : "test_data.csv:latest",
                     "mlflow_model" : "random_forest_export:prod",
