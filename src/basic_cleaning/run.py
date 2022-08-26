@@ -52,6 +52,9 @@ def go(args):
         df.select_dtypes(['object']).apply(pd.Series.astype, dtype='category')
         ], axis=1)#.reindex_axis(df.columns, axis=1)
 
+    idx = df['longitude'].between(-74.25, -73.50) & df['latitude'].between(40.5, 41.2)
+    df = df[idx].copy()
+
     logger.info(f"Returning cleaned data of {args.input_artifact}")
     logger.info(f"Uploading {args.output_artifact} to Weights & Biases")
     file_name_clean_sample = "clean_sample.csv"
